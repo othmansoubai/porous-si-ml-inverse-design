@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual environments
+.venv/
+env/
+venv/
+
+# Regenerated outputs (produced by ml_train_paper2.py when run inside ml/)
+ml/fig_ml_results.png
+ml/fig_inverse_design.png
+ml/ml_dataset_paper2.csv
+ml/ml_loocv_results.csv
+ml/ml_feature_importance.csv
+ml/ml_inverse_candidates.csv
+
+# OS files
+.DS_Store
+Thumbs.db
