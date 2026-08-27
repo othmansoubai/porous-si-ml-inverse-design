@@ -65,18 +65,20 @@ OUTDIR = os.path.dirname(os.path.abspath(__file__))
 DATA = [
     # Paper 1 reference points (Nz=48, 50% stagger)
     {"label": "bulk_si",             "group": "P1", "phi":  0.00, "S": 0.0, "stagger":  0.0, "neck_uc": 8.0, "AR": 1.0, "kappa": 12.03, "kappa_std": 0.29},
-    {"label": "P1_low_50pct",        "group": "P1", "phi":  6.84, "S": 3.0, "stagger": 50.0, "neck_uc": 5.0, "AR": 1.0, "kappa":  7.63, "kappa_std": 0.99},
+    # EXCLUDED (revision, R#3): phi=6.84% at S=3 is not reproducible by the
+    # 12-slice parametric builder; z-architecture differs from all other rows.
+    #{"label": "P1_low_50pct",        "group": "P1", "phi":  6.84, "S": 3.0, "stagger": 50.0, "neck_uc": 5.0, "AR": 1.0, "kappa":  7.63, "kappa_std": 0.99},
     {"label": "P1_high_50pct",       "group": "P1", "phi": 28.27, "S": 4.0, "stagger": 50.0, "neck_uc": 4.0, "AR": 1.0, "kappa":  2.59, "kappa_std": 0.02},
 
     # Group A — porosity sweep at 25% stagger
     {"label": "A_S2_d2",             "group": "A",  "phi":  8.54, "S": 2.0, "stagger": 25.0, "neck_uc": 4.0, "AR": 1.0, "kappa":  4.56, "kappa_std": 0.10},
     {"label": "A_S2.5_d2",           "group": "A",  "phi": 12.63, "S": 2.5, "stagger": 25.0, "neck_uc": 3.5, "AR": 1.0, "kappa":  4.02, "kappa_std": 0.22},
-    {"label": "A_S3_d2",             "group": "A",  "phi": 17.50, "S": 3.0, "stagger": 25.0, "neck_uc": 3.0, "AR": 1.0, "kappa":  3.16, "kappa_std": 0.21},  # 4 seeds, outlier 5.45 dropped
+    {"label": "A_S3_d2",             "group": "A",  "phi": 17.50, "S": 3.0, "stagger": 25.0, "neck_uc": 3.0, "AR": 1.0, "kappa":  3.46, "kappa_std": 0.28},  # re-run, 3 fresh seeds, none excluded
     {"label": "A_S4.5_d2",           "group": "A",  "phi": 36.78, "S": 4.5, "stagger": 25.0, "neck_uc": 1.5, "AR": 1.0, "kappa":  1.28, "kappa_std": 0.02},
 
     # Group B — stagger offset sweep
-    {"label": "B_S4_aligned_low",    "group": "B",  "phi":  6.25, "S": 4.0, "stagger":  0.0, "neck_uc": 4.0, "AR": 1.0, "kappa":  7.06, "kappa_std": 1.14},
-    {"label": "B_S4_quarter_low",    "group": "B",  "phi":  7.29, "S": 4.0, "stagger": 25.0, "neck_uc": 2.0, "AR": 1.0, "kappa":  4.39, "kappa_std": 0.14},
+    {"label": "B_S2_aligned_low",    "group": "B",  "phi":  8.01, "S": 2.0, "stagger":  0.0, "neck_uc": 6.0, "AR": 1.0, "kappa":  7.06, "kappa_std": 1.14},
+    {"label": "B_S2_d4_low",         "group": "B",  "phi":  8.59, "S": 2.0, "stagger": 50.0, "neck_uc": 2.0, "AR": 1.0, "kappa":  4.39, "kappa_std": 0.14},
     {"label": "B_S4_aligned_high",   "group": "B",  "phi": 28.32, "S": 4.0, "stagger":  0.0, "neck_uc": 4.0, "AR": 1.0, "kappa":  3.74, "kappa_std": 0.20},
     {"label": "B_S4_quarter_high",   "group": "B",  "phi": 29.57, "S": 4.0, "stagger": 25.0, "neck_uc": 2.0, "AR": 1.0, "kappa":  1.82, "kappa_std": 0.04},
 
@@ -92,7 +94,7 @@ DATA = [
     {"label": "D_AR2.5_vwide",       "group": "D",  "phi": 17.50, "S": 3.0, "stagger": 25.0, "neck_uc": 3.0, "AR": 2.5, "kappa":  2.69, "kappa_std": 0.10},
 
     # Validation — ML-suggested geometry
-    {"label": "V_S4d3_37pct",        "group": "V",  "phi": 29.93, "S": 4.0, "stagger": 37.5, "neck_uc": 1.0, "AR": 1.0, "kappa":  1.39, "kappa_std": 0.00},
+    {"label": "V_S4d3_37pct",        "group": "V",  "phi": 29.93, "S": 4.0, "stagger": 37.5, "neck_uc": 1.0, "AR": 1.0, "kappa":  1.39, "kappa_std": 0.01},
 ]
 
 FEAT_COLS = ["phi", "S", "stagger", "neck_uc", "AR"]
@@ -134,8 +136,6 @@ def loocv_rf(X, y, use_log=False, n_est=500):
 
 def loocv_gp(X, y, use_log=False):
     """Gaussian Process with leave-one-out CV."""
-    scaler = StandardScaler()
-    Xs = scaler.fit_transform(X)
     yt = np.log(y) if use_log else y.copy()
 
     kernel = (ConstantKernel(1.0, (1e-3, 1e3))
@@ -147,11 +147,13 @@ def loocv_gp(X, y, use_log=False):
     y_pred = np.zeros(len(y))
     y_std  = np.zeros(len(y))
 
-    for tr, te in loo.split(Xs):
+    for tr, te in loo.split(X):
+        # refit standardisation inside each fold (no information from held-out point)
+        sc_f = StandardScaler().fit(X[tr])
         gp = GaussianProcessRegressor(kernel=kernel, n_restarts_optimizer=10,
                                        random_state=42, normalize_y=True)
-        gp.fit(Xs[tr], yt[tr])
-        p, s = gp.predict(Xs[te], return_std=True)
+        gp.fit(sc_f.transform(X[tr]), yt[tr])
+        p, s = gp.predict(sc_f.transform(X[te]), return_std=True)
         if use_log:
             y_pred[te] = np.exp(p + s**2 / 2)
             y_std[te]  = y_pred[te] * np.sqrt(np.exp(s**2) - 1)
@@ -160,9 +162,10 @@ def loocv_gp(X, y, use_log=False):
             y_std[te]  = s
 
     # full model
+    scaler  = StandardScaler().fit(X)
     gp_full = GaussianProcessRegressor(kernel=kernel, n_restarts_optimizer=10,
                                         random_state=42, normalize_y=True)
-    gp_full.fit(Xs, yt)
+    gp_full.fit(scaler.transform(X), yt)
     return y_pred, y_std, gp_full, scaler
 
 
@@ -261,8 +264,6 @@ def make_figures(df, y, y_err, results, perm, feat_names, inv_cands, use_log):
 
     # ---- Figure 1: 6-panel ML results ----
     fig = plt.figure(figsize=(18, 11))
-    fig.suptitle("ML-Guided Inverse Design of Porous Si Thermal Metamaterials",
-                 fontsize=15, fontweight='bold', y=0.99)
     gs = gridspec.GridSpec(2, 3, hspace=0.38, wspace=0.35)
 
     # (a) RF predicted vs actual
@@ -304,7 +305,8 @@ def make_figures(df, y, y_err, results, perm, feat_names, inv_cands, use_log):
     si = perm.importances_mean.argsort()
     imp = perm.importances_mean[si]
     imp_s = perm.importances_std[si]
-    names = [feat_names[i] for i in si]
+    _PRETTY = {"phi":"$\\varphi$","S":"S","stagger":"stagger","neck_uc":"neck width","AR":"AR"}
+    names = [_PRETTY.get(feat_names[i], feat_names[i]) for i in si]
     cols = ['#5BA3CF'] * len(names)
     cols[-1] = '#E8706A'
     ax.barh(names, imp, xerr=imp_s, color=cols, edgecolor='white', capsize=3)
@@ -351,13 +353,12 @@ def make_figures(df, y, y_err, results, perm, feat_names, inv_cands, use_log):
 
     path1 = os.path.join(OUTDIR, "fig_ml_results.png")
     fig.savefig(path1, dpi=300, bbox_inches='tight', facecolor='white')
+    fig.savefig(path1.replace('.png','.pdf'), bbox_inches='tight', facecolor='white')
     plt.close(fig)
     print(f"  ✅ {path1}")
 
     # ---- Figure 2: Inverse design ----
     fig2, axes2 = plt.subplots(1, 2, figsize=(14, 5.5))
-    fig2.suptitle("Inverse Design: ML-Suggested Geometries for NEMD Validation",
-                  fontsize=13, fontweight='bold')
 
     # (a) predictions vs targets
     ax = axes2[0]
@@ -388,13 +389,14 @@ def make_figures(df, y, y_err, results, perm, feat_names, inv_cands, use_log):
             ax.plot(range(len(FEAT_COLS)), vals, '-o', ms=8, lw=2, alpha=0.8,
                     label=f"κ={t:.1f} → {c['kappa_pred']:.2f}±{c['kappa_std']:.2f}")
     ax.set_xticks(range(len(FEAT_COLS)))
-    ax.set_xticklabels(FEAT_COLS, fontsize=10)
+    ax.set_xticklabels([_PRETTY.get(f, f) for f in FEAT_COLS], fontsize=10)
     ax.set_ylabel("Normalized value"); ax.set_ylim(-0.1, 1.1)
     ax.set_title("(b) Candidate Feature Profiles", fontsize=11, fontweight='bold')
     ax.legend(fontsize=8)
 
     path2 = os.path.join(OUTDIR, "fig_inverse_design.png")
     fig2.savefig(path2, dpi=300, bbox_inches='tight', facecolor='white')
+    fig2.savefig(path2.replace('.png','.pdf'), bbox_inches='tight', facecolor='white')
     plt.close(fig2)
     print(f"  ✅ {path2}")
 

@@ -1,0 +1,23 @@
+label,seed,kappa,note
+R1_S3.5_d3,12345,2.152,validation target 2.0
+R1_S3.5_d3,34567,2.035,validation target 2.0
+R1_S3.5_d3,56789,2.086,validation target 2.0
+R2_S2.5_d1,12345,5.186,validation target 5.0
+R2_S2.5_d1,34567,5.878,validation target 5.0
+R2_S2.5_d1,56789,4.986,validation target 5.0
+R2_S2.5_d1,78901,5.025,validation target 5.0
+R2_S2.5_d1,91234,4.223,validation target 5.0
+R2_S2.5_d1,11111,5.175,validation target 5.0
+SZ_S3_Nz48,12345,3.811,size convergence
+SZ_S3_Nz48,34567,3.437,size convergence
+SZ_S3_Nz48,56789,3.140,size convergence
+SZ_S3_Nz72,12345,3.606,size convergence
+SZ_S3_Nz72,34567,3.989,size convergence
+SZ_S3_Nz72,56789,4.194,size convergence
+SZ_S3_Nz96,12345,4.436,size convergence
+SZ_S3_Nz96,34567,4.374,size convergence
+SZ_S3_Nz96,56789,4.249,size convergence
+SZ_S4.5_Nz72,12345,1.351,size convergence
+SZ_S4.5_Nz72,34567,1.363,size convergence
+SZ_S4.5_Nz96,12345,1.443,size convergence
+SZ_S4.5_Nz96,34567,1.394,size convergence

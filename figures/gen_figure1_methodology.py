@@ -53,11 +53,11 @@ ax1.axis('off')
 ax1.set_title('(a) Inverse Design Workflow', fontsize=14, fontweight='bold', pad=15)
 
 boxes = [
-    (5, 9.0, 8.0, 1.2, ['NEMD Dataset Generation', '19 porous Si geometries × 3 seeds'], C_BLUE, 'white'),
+    (5, 9.0, 8.0, 1.2, ['NEMD Dataset Generation', '18 porous Si geometries × 3 seeds'], C_BLUE, 'white'),
     (5, 7.0, 8.0, 1.2, ['Feature Engineering', 'φ, S, stagger, neck width, AR → κ'], C_PURPLE, 'white'),
     (5, 5.0, 8.0, 1.2, ['ML Training (LOOCV)', 'Random Forest + Gaussian Process'], C_GREEN, 'white'),
     (5, 3.0, 8.0, 1.2, ['GP Inverse Design', 'Target κ → Optimal geometry (φ*, S*, d*, neck*, AR*)'], C_ORANGE, 'white'),
-    (5, 1.0, 8.0, 1.2, ['NEMD Validation', '2/2 candidates confirmed within 1σ'], C_RED, 'white'),
+    (5, 1.0, 8.0, 1.2, ['NEMD Validation', '3 out-of-sample geometries validated'], C_RED, 'white'),
 ]
 
 for (cx, cy, w, h, texts, fc, tc) in boxes:
@@ -78,9 +78,9 @@ for y_start, y_end in [(8.4, 7.6), (6.4, 5.6), (4.4, 3.6), (3.4, 1.6)]:
 side_notes = [
     (9.5, 9.0, 'LAMMPS\nMüller-Plathe\n500 ps × 3 seeds', C_BLUE),
     (9.5, 7.0, '5 features\n1 target (κ)', C_PURPLE),
-    (9.5, 5.0, 'n = 19\nMAE ≈ 1.0\nR² ≈ 0.52', C_GREEN),
-    (9.5, 3.0, 'Differential\nevolution\n+ uncertainty', C_ORANGE),
-    (9.5, 1.0, 'κ = 1.39 vs 1.52\nκ = 3.03 vs 3.02', C_RED),
+    (9.5, 5.0, 'n = 18\nMAE ≈ 0.39\nR² ≈ 0.94', C_GREEN),
+    (9.5, 3.0, 'Constrained\ngrid search\n+ uncertainty', C_ORANGE),
+    (9.5, 1.0, '1.39 vs 1.34\n2.09 vs 2.12\n5.35 vs 4.73', C_RED),
 ]
 for (x, y, text, color) in side_notes:
     ax1.text(x, y, text, ha='center', va='center', fontsize=8,
@@ -217,6 +217,7 @@ ax2.legend(handles=legend_items, loc='upper left', fontsize=9,
 # Save
 path = os.path.join(OUTDIR, "fig1_methodology.png")
 fig.savefig(path, dpi=300, bbox_inches='tight', facecolor='white')
+fig.savefig(path.replace('.png','.pdf'), bbox_inches='tight', facecolor='white')
 plt.close(fig)
 print(f"✅ Saved: {path}")
 print("Fix applied: Pore A label now fully visible (stagger annotation moved left)")
