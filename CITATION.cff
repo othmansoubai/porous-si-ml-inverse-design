@@ -1,17 +1,26 @@
 cff-version: 1.2.0
-message: "If you use this software or dataset, please cite it as below."
+message: "If you use this software or dataset, please cite the associated research article."
+
 title: "Machine-Learning–Guided Inverse Design of Porous Silicon Metamaterials for Targeted Thermal Conductivity"
+
+type: software
+
 authors:
   - family-names: "Soubai"
     given-names: "Othman"
     affiliation: "LSA Laboratory, ENSAH, Abdelmalek Essaadi University, Al-Hoceima, Morocco"
     email: "othman.soubai@etu.uae.ac.ma"
+
   - family-names: "Abouelhanoune"
     given-names: "Younes"
     affiliation: "LSA Laboratory, ENSAH, Abdelmalek Essaadi University, Al-Hoceima, Morocco"
+
 date-released: 2026-06-06
+
 url: "https://github.com/othmansoubai/porous-si-ml-inverse-design"
+
 license: MIT
+
 keywords:
   - porous silicon
   - thermal conductivity
@@ -19,3 +28,16 @@ keywords:
   - inverse design
   - molecular dynamics
   - metamaterials
+
+preferred-citation:
+  type: article
+  authors:
+    - family-names: "Soubai"
+      given-names: "Othman"
+    - family-names: "Abouelhanoune"
+      given-names: "Younes"
+  title: "Machine-learning-guided inverse design of porous silicon metamaterials for targeted thermal conductivity"
+  journal: "Computational Materials Science"
+  volume: 275
+  year: 2026
+  doi: "10.1016/j.commatsci.2026.115060"
