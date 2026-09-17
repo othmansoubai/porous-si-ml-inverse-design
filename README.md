@@ -1,11 +1,12 @@
 # Machine-Learning–Guided Inverse Design of Porous Silicon Metamaterials
 
-This repository contains the dataset, machine-learning code, and molecular dynamics input files for the study:
+This repository contains the dataset, machine-learning code, and molecular dynamics input files associated with the published research article:
 
-> **Machine-Learning–Guided Inverse Design of Porous Silicon Metamaterials for Targeted Thermal Conductivity**
-> O. Soubai, Y. Abouelhanoune
-> LSA Laboratory, ENSAH, Abdelmalek Essaadi University, Al-Hoceima, Morocco
-> *Submitted to Computational Materials Science (2026)*
+> **Machine-Learning–Guided Inverse Design of Porous Silicon Metamaterials for Targeted Thermal Conductivity**  
+> Othman Soubai, Younes Abouelhanoune  
+> LSA Laboratory, ENSAH, Abdelmalek Essaadi University, Al-Hoceima, Morocco  
+> *Computational Materials Science*, Volume 275, Article 115060 (2026)  
+> https://doi.org/10.1016/j.commatsci.2026.115060
 
 ## Overview
 
@@ -47,6 +48,15 @@ Install Python dependencies:
 - kappa = Q / (2 A |dT/dz|), with A the full geometric cross-section.
 - Three independent seeds per geometry; mean ± standard deviation reported. Six seeds were used for the highest-conductivity validation candidate, where the seed-to-seed scatter is largest. All individual seed values are given in `data/kappa_per_seed_revision.csv`.
 - Porosities are atom-counted as (N_bulk − N_remaining)/N_bulk rather than taken from the nominal design.
+
+## Citation
+
+If you use the data, scripts, or methodology provided in this repository, please cite:
+
+> O. Soubai and Y. Abouelhanoune,  
+> “Machine-learning-guided inverse design of porous silicon metamaterials for targeted thermal conductivity,”  
+> *Computational Materials Science*, vol. 275, art. 115060, 2026.  
+> https://doi.org/10.1016/j.commatsci.2026.115060
 
 ## License
 
